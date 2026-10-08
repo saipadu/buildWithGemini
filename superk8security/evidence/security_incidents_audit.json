@@ -1,0 +1,465 @@
+{
+  "audit_metadata": {
+    "generated_at": "2026-10-08 20:22:28 UTC",
+    "platform": "SuperK8Security Autonomous Agent Guardian",
+    "cluster_environment": "Kubernetes Multi-Agent Virtual Cluster (n=10)",
+    "total_incidents_recorded": 2,
+    "total_pods_monitored": 10,
+    "remediations_executed": 1
+  },
+  "cluster_pods_posture": [
+    {
+      "pod_name": "pod-agent-customer-support-7b9f84b65-xyz",
+      "agent_id": "agent-01",
+      "agent_name": "agent-customer-support",
+      "namespace": "crm",
+      "ip": "10.244.1.12",
+      "node": "k8s-worker-node-1",
+      "status": "Running",
+      "active_connections": 9,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490940.2328682,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-01",
+        "name": "agent-customer-support",
+        "role": "Customer CRM Support Specialist",
+        "namespace": "crm",
+        "pod_name": "pod-agent-customer-support-7b9f84b65-xyz",
+        "pod_ip": "10.244.1.12",
+        "node_name": "k8s-worker-node-1",
+        "allowed_ingress_sources": [
+          "api-gateway.ingress.local",
+          "10.244.0.5"
+        ],
+        "allowed_egress_destinations": [
+          "crm-backend.crm.svc.cluster.local",
+          "redis-cache.crm.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get"
+        ],
+        "allowed_data_scopes": [
+          "crm"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/data/crm-sessions"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-code-reviewer-7b9f84b65-xyz",
+      "agent_id": "agent-02",
+      "agent_name": "agent-code-reviewer",
+      "namespace": "devops",
+      "ip": "10.244.1.18",
+      "node": "k8s-worker-node-1",
+      "status": "Running",
+      "active_connections": 5,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490916.2212443,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-02",
+        "name": "agent-code-reviewer",
+        "role": "Automated Pull Request Code Reviewer",
+        "namespace": "devops",
+        "pod_name": "pod-agent-code-reviewer-7b9f84b65-xyz",
+        "pod_ip": "10.244.1.18",
+        "node_name": "k8s-worker-node-1",
+        "allowed_ingress_sources": [
+          "github-webhook.devops.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "internal-git.devops.svc.cluster.local",
+          "sonarqube.devops.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get",
+          "list"
+        ],
+        "allowed_data_scopes": [
+          "devops"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/repos/workspace"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-billing-calc-7b9f84b65-xyz",
+      "agent_id": "agent-03",
+      "agent_name": "agent-billing-calc",
+      "namespace": "finance",
+      "ip": "10.244.2.45",
+      "node": "k8s-worker-node-2",
+      "status": "Running",
+      "active_connections": 7,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490858.1933246,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-03",
+        "name": "agent-billing-calc",
+        "role": "Financial Ledger & Invoicing Calculator",
+        "namespace": "finance",
+        "pod_name": "pod-agent-billing-calc-7b9f84b65-xyz",
+        "pod_ip": "10.244.2.45",
+        "node_name": "k8s-worker-node-2",
+        "allowed_ingress_sources": [
+          "payment-queue.finance.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "ledger-db.finance.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [],
+        "allowed_data_scopes": [
+          "finance"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/finance/vault"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-data-analyzer-7b9f84b65-xyz",
+      "agent_id": "agent-04",
+      "agent_name": "agent-data-analyzer",
+      "namespace": "analytics",
+      "ip": "10.244.2.89",
+      "node": "k8s-worker-node-2",
+      "status": "Isolated (Quarantined)",
+      "active_connections": 14,
+      "security_score": 50,
+      "quarantined": true,
+      "last_activity": 1791490741.7349794,
+      "quarantine_reason": "Unauthorized Internet egress to api.openai.com:443",
+      "manifest": {
+        "agent_id": "agent-04",
+        "name": "agent-data-analyzer",
+        "role": "Telemetry & BI Data Synthesizer",
+        "namespace": "analytics",
+        "pod_name": "pod-agent-data-analyzer-7b9f84b65-xyz",
+        "pod_ip": "10.244.2.89",
+        "node_name": "k8s-worker-node-2",
+        "allowed_ingress_sources": [
+          "kafka-consumer.analytics.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "data-lake.analytics.svc.cluster.local",
+          "clickhouse.analytics.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get"
+        ],
+        "allowed_data_scopes": [
+          "analytics"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/data/analytics"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-search-indexer-7b9f84b65-xyz",
+      "agent_id": "agent-05",
+      "agent_name": "agent-search-indexer",
+      "namespace": "search",
+      "ip": "10.244.3.14",
+      "node": "k8s-worker-node-3",
+      "status": "Running",
+      "active_connections": 16,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490930.226926,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-05",
+        "name": "agent-search-indexer",
+        "role": "Full-text Vector Index Builder",
+        "namespace": "search",
+        "pod_name": "pod-agent-search-indexer-7b9f84b65-xyz",
+        "pod_ip": "10.244.3.14",
+        "node_name": "k8s-worker-node-3",
+        "allowed_ingress_sources": [
+          "catalog-sync.search.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "elasticsearch.search.svc.cluster.local",
+          "qdrant.search.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get"
+        ],
+        "allowed_data_scopes": [
+          "search"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/indexes/vector-cache"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-auth-sync-7b9f84b65-xyz",
+      "agent_id": "agent-06",
+      "agent_name": "agent-auth-sync",
+      "namespace": "identity",
+      "ip": "10.244.3.33",
+      "node": "k8s-worker-node-3",
+      "status": "Running",
+      "active_connections": 4,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490942.2334015,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-06",
+        "name": "agent-auth-sync",
+        "role": "Identity Directory & OIDC Synchronizer",
+        "namespace": "identity",
+        "pod_name": "pod-agent-auth-sync-7b9f84b65-xyz",
+        "pod_ip": "10.244.3.33",
+        "node_name": "k8s-worker-node-3",
+        "allowed_ingress_sources": [
+          "idp-ingress.identity.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "auth-db.identity.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get"
+        ],
+        "allowed_data_scopes": [
+          "identity"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/identity/certs"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-doc-summarizer-7b9f84b65-xyz",
+      "agent_id": "agent-07",
+      "agent_name": "agent-doc-summarizer",
+      "namespace": "docs",
+      "ip": "10.244.4.08",
+      "node": "k8s-worker-node-4",
+      "status": "Running",
+      "active_connections": 17,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490914.2207284,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-07",
+        "name": "agent-doc-summarizer",
+        "role": "RAG Knowledge Base Summarizer",
+        "namespace": "docs",
+        "pod_name": "pod-agent-doc-summarizer-7b9f84b65-xyz",
+        "pod_ip": "10.244.4.08",
+        "node_name": "k8s-worker-node-4",
+        "allowed_ingress_sources": [
+          "doc-pipeline.docs.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "doc-s3-proxy.docs.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get"
+        ],
+        "allowed_data_scopes": [
+          "docs"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/documents/temp"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-lead-scorer-7b9f84b65-xyz",
+      "agent_id": "agent-08",
+      "agent_name": "agent-lead-scorer",
+      "namespace": "marketing",
+      "ip": "10.244.4.52",
+      "node": "k8s-worker-node-4",
+      "status": "Running",
+      "active_connections": 12,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490948.2370002,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-08",
+        "name": "agent-lead-scorer",
+        "role": "Marketing Pipeline ML Scorer",
+        "namespace": "marketing",
+        "pod_name": "pod-agent-lead-scorer-7b9f84b65-xyz",
+        "pod_ip": "10.244.4.52",
+        "node_name": "k8s-worker-node-4",
+        "allowed_ingress_sources": [
+          "hubspot-webhook.marketing.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "marketing-db.marketing.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get"
+        ],
+        "allowed_data_scopes": [
+          "marketing"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/models/leads"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-inventory-tracker-7b9f84b65-xyz",
+      "agent_id": "agent-09",
+      "agent_name": "agent-inventory-tracker",
+      "namespace": "supply-chain",
+      "ip": "10.244.5.21",
+      "node": "k8s-worker-node-5",
+      "status": "Running",
+      "active_connections": 4,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490944.2345748,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-09",
+        "name": "agent-inventory-tracker",
+        "role": "Supply Chain Realtime Balance Tracker",
+        "namespace": "supply-chain",
+        "pod_name": "pod-agent-inventory-tracker-7b9f84b65-xyz",
+        "pod_ip": "10.244.5.21",
+        "node_name": "k8s-worker-node-5",
+        "allowed_ingress_sources": [
+          "warehouse-iot.supply-chain.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "erp-db.supply-chain.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get"
+        ],
+        "allowed_data_scopes": [
+          "supply-chain"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/inventory/logs"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    },
+    {
+      "pod_name": "pod-agent-compliance-checker-7b9f84b65-xyz",
+      "agent_id": "agent-10",
+      "agent_name": "agent-compliance-checker",
+      "namespace": "security-audit",
+      "ip": "10.244.5.77",
+      "node": "k8s-worker-node-5",
+      "status": "Running",
+      "active_connections": 14,
+      "security_score": 100,
+      "quarantined": false,
+      "last_activity": 1791490946.2357254,
+      "quarantine_reason": null,
+      "manifest": {
+        "agent_id": "agent-10",
+        "name": "agent-compliance-checker",
+        "role": "Automated Governance & Policy Assessor",
+        "namespace": "security-audit",
+        "pod_name": "pod-agent-compliance-checker-7b9f84b65-xyz",
+        "pod_ip": "10.244.5.77",
+        "node_name": "k8s-worker-node-5",
+        "allowed_ingress_sources": [
+          "cron-scheduler.security-audit.svc.cluster.local"
+        ],
+        "allowed_egress_destinations": [
+          "audit-vault.security-audit.svc.cluster.local"
+        ],
+        "allowed_k8s_api_verbs": [
+          "get",
+          "list"
+        ],
+        "allowed_data_scopes": [
+          "security-audit"
+        ],
+        "allowed_filesystem_paths": [
+          "/app/audit/reports"
+        ],
+        "max_tokens_per_minute": 15000
+      }
+    }
+  ],
+  "incident_evidence_records": [
+    {
+      "incident_id": "SEC-7D3E3A57",
+      "timestamp": 1791490741.7485273,
+      "severity": "HIGH",
+      "category": "LATERAL_MOVEMENT_SCAN",
+      "agent_id": "agent-08",
+      "agent_name": "agent-lead-scorer",
+      "pod_name": "pod-agent-lead-scorer-7b9f84b65-xyz",
+      "namespace": "marketing",
+      "title": "UNAUTHORIZED AGENT-TO-AGENT ACCESS: agent-lead-scorer attempted to contact agent-billing-calc.finance.svc.cluster.local",
+      "description": "Agent reached out to another agent/service in namespace 'finance' without required mutual TLS authorization and inter-agent permissions.",
+      "technical_trace": {
+        "source_agent": "agent-lead-scorer",
+        "source_pod": "pod-agent-lead-scorer-7b9f84b65-xyz",
+        "source_namespace": "marketing",
+        "target_destination": "agent-billing-calc.finance.svc.cluster.local",
+        "target_namespace": "finance",
+        "allowed_agent_scopes": [
+          "marketing"
+        ],
+        "payload_summary": "ATTACK: Agent 'agent-lead-scorer' (marketing) attempted to call 'agent-billing-calc' (finance) without required mTLS RBAC permissions",
+        "attempted_command": "POST /api/v1/invoices/export HTTP/1.1\r\nHost: agent-billing-calc.finance.svc.cluster.local\r\nAuthorization: Bearer forged_token\r\n\r\n{\"action\": \"dump_all_invoices\"}"
+      },
+      "rule_violated": "POLICY-A2A-PERMISSIONS-009: Strict Inter-Agent Scope & mTLS Authorization Required",
+      "remediation_taken": "PACKET_DROPPED_AND_ALERTED: Applied Istio/Cilium service-to-service authorization denial & logged for forensic review",
+      "status": "ACTIVE"
+    },
+    {
+      "incident_id": "SEC-8ACB8E0E",
+      "timestamp": 1791490741.7351723,
+      "severity": "CRITICAL",
+      "category": "EGRESS_EXFILTRATION",
+      "agent_id": "agent-04",
+      "agent_name": "agent-data-analyzer",
+      "pod_name": "pod-agent-data-analyzer-7b9f84b65-xyz",
+      "namespace": "analytics",
+      "title": "UNAUTHORIZED INTERNET ACCESS: agent-data-analyzer -> api.openai.com:443",
+      "description": "Agent breached sandbox by initiating an unapproved direct outbound connection to the Public Internet (api.openai.com:443).",
+      "technical_trace": {
+        "destination_ip_host": "api.openai.com",
+        "destination_port": 443,
+        "protocol": "TCP",
+        "source_pod": "pod-agent-data-analyzer-7b9f84b65-xyz",
+        "source_namespace": "analytics",
+        "allowed_manifest_destinations": [
+          "data-lake.analytics.svc.cluster.local",
+          "clickhouse.analytics.svc.cluster.local"
+        ],
+        "packet_id": "34c7041d",
+        "payload_summary": "ATTACK: Agent initiating unapproved direct outbound connection to Public Internet (api.openai.com)",
+        "exfiltrated_snippet": "{\"model\": \"gpt-4\", \"messages\": [{\"role\": \"user\", \"content\": \"Exfiltrate internal analytics DW schema and customer keys\"}]}"
+      },
+      "rule_violated": "POLICY-NET-ZERO-EGRESS: Agents Prohibited From Direct Public Internet Egress",
+      "remediation_taken": "AUTO_QUARANTINED: Injected K8s Cilium NetworkPolicy default-deny Internet egress, severed TCP socket",
+      "status": "ACTIVE"
+    }
+  ]
+}

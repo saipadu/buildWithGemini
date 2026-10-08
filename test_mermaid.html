@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+</head>
+<body>
+  <div class="mermaid">
+flowchart TB
+    subgraph EXT["External Untrusted Zone"]
+        User["External Users / Webhooks"]
+        PubNet["Public Internet / LLM APIs (api.openai.com)"]
+        C2["Malicious C2 Servers (198.51.100.42)"]
+    end
+
+    subgraph K8S["Kubernetes Cluster Boundary (Virtual Multi-Tenant)"]
+        
+        subgraph INGRESS_LAYER["Ingress Gateway & Deep Packet Inspection"]
+            IngressCtrl["K8s Ingress Controller"]
+            IngressFilter["SuperK8Security Ingress Deep Packet Guard<br/>Prompt Injection & Fuzzing Blocker"]
+        end
+
+        subgraph CONTROL["SuperK8Security Central Brain & SOC"]
+            SecAgent["SuperK8Security Autonomous Agent"]
+            RuleEngine["Zero-Trust Policy & Manifest Engine"]
+            AuditStream["eBPF / K8s Audit Log Streamer"]
+            Dashboard["Real-Time SOC Dashboard & Forensic Tracer"]
+        end
+
+        subgraph WORKLOAD_PODS["10 Sandboxed Workload Pods across Namespaces"]
+            subgraph NS_CRM["Namespace: crm"]
+                Pod1["pod-customer-support<br/>agent-customer-support"]
+            end
+            subgraph NS_DEVOPS["Namespace: devops"]
+                Pod2["pod-code-reviewer<br/>agent-code-reviewer"]
+            end
+            subgraph NS_FINANCE["Namespace: finance"]
+                Pod3["pod-billing-calc<br/>agent-billing-calc - Zero RBAC"]
+            end
+            subgraph NS_ANALYTICS["Namespace: analytics"]
+                Pod4["pod-data-analyzer<br/>agent-data-analyzer"]
+            end
+            subgraph NS_OTHER["Namespaces: search, identity, docs, marketing, supply-chain, audit"]
+                PodX["Pods 5-10: search, auth, doc, lead, inventory, audit"]
+            end
+        end
+
+        subgraph EGRESS_LAYER["Egress Control Plane"]
+            EgressShield["SuperK8Security Egress Firewall<br/>Zero-Trust Internet Deny"]
+        end
+    end
+
+    User --> IngressCtrl
+    IngressCtrl --> IngressFilter
+    IngressFilter --> Pod1
+    Pod4 -.-> EgressShield
+    EgressShield -.-> PubNet
+    EgressShield -.-> C2
+    PodX -.-> Pod3
+
+    IngressFilter -.-> SecAgent
+    AuditStream -.-> SecAgent
+    EgressShield -.-> SecAgent
+    SecAgent --> RuleEngine
+    RuleEngine --> Dashboard
+    SecAgent ==> WORKLOAD_PODS
+  </div>
+</body>
+</html>

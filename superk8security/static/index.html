@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuperK8Security - Agent Sandbox & Cluster Guardian SOC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#22c55e',
+              600: '#16a34a',
+              900: '#14532d',
+            },
+            dark: {
+              bg: '#090d16',
+              card: '#111827',
+              border: '#1f293d',
+              accent: '#38bdf8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .animate-pulse-slow { animation: pulse-slow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: #0b1120; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #22324e; border-radius: 4px; }
+    .cyber-glow { box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
+    .danger-glow { box-shadow: 0 0 20px rgba(239, 68, 68, 0.25); }
+    .mitigation-glow { box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); }
+    .breach-glow { box-shadow: 0 0 15px rgba(244, 63, 94, 0.25); }
+  </style>
+</head>
+<body class="bg-dark-bg text-slate-200 font-sans min-h-screen flex flex-col antialiased">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="border-b border-dark-border bg-dark-card/90 backdrop-blur sticky top-0 z-50 px-6 py-2.5 flex items-center justify-between shadow-lg">
+    <div class="flex items-center space-x-3.5">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 via-indigo-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+        <i class="fa-solid fa-shield-halved text-white text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            SuperK8Security <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 uppercase tracking-widest font-mono">Agent Guard v3.2 &bull; Continuous Breach</span>
+          </h1>
+        </div>
+        <p class="text-[11px] text-slate-400">Kubernetes Multi-Agent Sandboxing &bull; Dynamic 1-Min Rotating Breach Engine &bull; Auto-Correct HITL</p>
+      </div>
+    </div>
+
+    <!-- Cluster Status, Navigation & Actions -->
+    <div class="flex items-center space-x-3 text-xs">
+      <a href="/slides" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-chalkboard-user"></i> Architecture Slides
+      </a>
+
+      <div class="flex items-center space-x-2 px-2.5 py-1.5 rounded-lg bg-dark-bg border border-dark-border">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-[11px] font-mono text-emerald-400" id="live-indicator">LIVE MONITORING</span>
+      </div>
+
+      <button onclick="resetCluster()" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-arrows-rotate"></i> Reset Quarantines
+      </button>
+    </div>
+  </header>
+
+  <!-- LIVE 1-MINUTE ROTATING BREACH CAMPAIGN BANNER -->
+  <div class="px-6 pt-2 pb-1">
+    <div class="p-2.5 rounded-xl bg-gradient-to-r from-rose-950/40 via-purple-950/30 to-slate-900 border border-rose-900/50 flex flex-wrap items-center justify-between gap-2 shadow-md breach-glow">
+      <div class="flex items-center space-x-3">
+        <div class="w-7 h-7 rounded-lg bg-rose-950 border border-rose-700 text-rose-400 flex items-center justify-center text-xs animate-pulse">
+          <i class="fa-solid fa-stopwatch"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-rose-300">Continuous 1-Minute Breach Simulation Engine:</span>
+            <span class="px-2 py-0.2 rounded font-mono text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800" id="campaign-status-badge">
+              <i class="fa-solid fa-play text-xs mr-1 text-emerald-400"></i> ACTIVE (1m INTERVAL)
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400">Rotating breach scenarios across all 10 agents: Public Internet Egress, Cross-Namespace A2A, Prompt Injections, RBAC Escalations, Filesystem Escapes &amp; <strong>Anomalous Large Token Spikes</strong>.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <!-- Countdown Timer -->
+        <div class="bg-black/60 px-3 py-1.5 rounded-lg border border-slate-800 text-right font-mono">
+          <div class="text-[9px] uppercase text-slate-500">Next Breach In</div>
+          <div class="text-xs font-bold text-rose-400" id="campaign-countdown">--s</div>
+        </div>
+
+        <!-- Trigger Instant Breach -->
+        <button onclick="triggerNowPeriodicBreach()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-sm shadow-rose-900/50">
+          <i class="fa-solid fa-bolt"></i> Breach Next Agent Now
+        </button>
+
+        <!-- Test Outside Ingress Thread -->
+        <button onclick="triggerSpecificBreach('external_ingress_thread')" class="px-2.5 py-1.5 rounded-lg bg-red-950 hover:bg-red-900 text-rose-300 border border-rose-800 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-shield-virus"></i> Test Outside Ingress Thread
+        </button>
+
+        <!-- Toggle Pause/Resume -->
+        <button onclick="togglePeriodicBreach()" id="campaign-toggle-btn" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-mono transition">
+          <i class="fa-solid fa-pause"></i> Pause
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS RIBBON -->
+  <div class="px-6 py-2 grid grid-cols-2 md:grid-cols-6 gap-2.5">
+    <div class="p-2.5 rounded-xl bg-dark-card border border-dark-border cyber-glow">
+      <div class="text-[10px] text-slate-400 font-medium">Monitored Pods</div>
+      <div class="text-lg font-bold font-mono text-white mt-0.5 flex items-baseline justify-between">
+        <span id="metric-total-pods">10</span>
+        <span class="text-[9px] text-emerald-400 font-normal">10 Active</span>
+      </div>
+    </div>
+    <div class="p-2.5 rounded-xl bg-dark-card border border-dark-border">
+      <div class="text-[10px] text-slate-400 font-medium">Sandboxed Agents</div>
+      <div class="text-lg font-bold font-mono text-cyan-400 mt-0.5 flex items-baseline justify-between">
+        <span id="metric-sandboxed">10 / 10</span>
+        <span class="text-[9px] text-cyan-500 font-normal">Zero-Trust</span>
+      </div>
+    </div>
+    <div class="p-2.5 rounded-xl bg-dark-card border border-dark-border">
+      <div class="text-[10px] text-slate-400 font-medium">Pending HITL Approvals</div>
+      <div class="text-lg font-bold font-mono text-purple-400 mt-0.5 flex items-baseline justify-between">
+        <span id="metric-pending-hitl">0</span>
+        <i class="fa-solid fa-user-shield text-purple-500/50 text-xs"></i>
+      </div>
+    </div>
+    <div class="p-2.5 rounded-xl bg-dark-card border border-dark-border">
+      <div class="text-[10px] text-slate-400 font-medium">Critical Incidents</div>
+      <div class="text-lg font-bold font-mono text-rose-500 mt-0.5 flex items-baseline justify-between">
+        <span id="metric-critical">0</span>
+        <i class="fa-solid fa-triangle-exclamation text-rose-500/50 text-xs"></i>
+      </div>
+    </div>
+    <div class="p-2.5 rounded-xl bg-dark-card border border-dark-border">
+      <div class="text-[10px] text-slate-400 font-medium">High / Medium Alerts</div>
+      <div class="text-lg font-bold font-mono text-amber-400 mt-0.5 flex items-baseline justify-between">
+        <span id="metric-high-med">0</span>
+        <i class="fa-solid fa-bolt text-amber-500/50 text-xs"></i>
+      </div>
+    </div>
+    <div class="p-2.5 rounded-xl bg-dark-card border border-dark-border">
+      <div class="text-[10px] text-slate-400 font-medium">Auto-Correct Remediation</div>
+      <div class="text-lg font-bold font-mono text-emerald-400 mt-0.5 flex items-baseline justify-between">
+        <span id="metric-remediations">0</span>
+        <i class="fa-solid fa-wand-magic-sparkles text-emerald-500/50 text-xs"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: AUTO-CORRECT & HUMAN-IN-THE-LOOP (HITL) MITIGATION CONSOLE -->
+  <section class="px-6 py-1.5">
+    <div class="bg-gradient-to-r from-slate-900 via-purple-950/20 to-slate-900 border border-purple-900/60 rounded-xl p-3 shadow-lg mitigation-glow">
+      <div class="flex items-center justify-between mb-2 border-b border-purple-900/40 pb-1.5">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-6 h-6 rounded-lg bg-purple-950 border border-purple-700 text-purple-400 flex items-center justify-center text-xs shadow-md">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
+                Auto-Correct Mitigation &amp; Human-in-the-Loop (HITL) Console
+              </h2>
+              <span class="text-[9.5px] font-mono px-2 py-0.2 rounded-full bg-purple-950 text-purple-300 border border-purple-700" id="hitl-queue-count">
+                0 Pending Approvals
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="text-[10.5px] font-mono text-purple-300 flex items-center gap-1">
+          <i class="fa-solid fa-shield-heart text-purple-400"></i> Active Operator: <span class="font-bold text-white">Lead Security Architect</span>
+        </div>
+      </div>
+
+      <!-- HITL CARDS GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 overflow-x-auto" id="hitl-proposals-container">
+        <div class="col-span-full text-center py-5 text-slate-500 text-xs italic bg-slate-950/40 rounded-lg border border-slate-800">
+          <i class="fa-solid fa-circle-check text-emerald-500 text-lg mb-1"></i><br>
+          No pending mitigation proposals. All agent workloads are securely sandboxed.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN WORKSPACE: POD MESH (LEFT) & INCIDENT TRACER (RIGHT) -->
+  <main class="flex-1 px-6 py-1.5 grid grid-cols-1 lg:grid-cols-12 gap-3.5 overflow-hidden">
+    
+    <!-- LEFT PANEL: 10 WORKLOAD PODS (col-span-7) -->
+    <div class="lg:col-span-7 flex flex-col space-y-2.5">
+      <div class="bg-dark-card border border-dark-border rounded-xl p-3 flex-1 flex flex-col shadow-sm">
+        <div class="flex items-center justify-between mb-1.5 border-b border-slate-800 pb-1">
+          <div class="flex items-center space-x-2">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-cubes text-cyan-400"></i> Active Kubernetes Pods &amp; Agent Sandboxes (n=10)
+            </h2>
+            <span class="text-[9.5px] bg-slate-800 text-slate-400 px-2 py-0.2 rounded font-mono">Zero-Trust Egress &amp; A2A Enforced</span>
+          </div>
+          <div class="text-[10.5px] text-slate-400">Click a pod to inspect its sandbox scope</div>
+        </div>
+
+        <!-- POD GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 overflow-y-auto max-h-[360px] scrollbar-thin pr-1" id="pods-grid">
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: REAL-TIME INCIDENT FEED & FORENSIC TRACE (col-span-5) -->
+    <div class="lg:col-span-5 flex flex-col space-y-2.5">
+      <!-- Live Incident Stream -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-2.5 flex flex-col h-[175px] shadow-sm">
+        <div class="flex items-center justify-between mb-1 border-b border-slate-800 pb-1">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+            <i class="fa-solid fa-radiation text-rose-500 animate-pulse"></i> Real-Time Incident Stream
+          </h2>
+          <span class="text-[9.5px] text-slate-400 font-mono" id="incident-counter">0 events</span>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto space-y-1.5 scrollbar-thin pr-1" id="incidents-feed">
+        </div>
+      </div>
+
+      <!-- Deep Forensic Trace Inspector -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-2.5 flex-1 flex flex-col shadow-sm max-h-[200px]">
+        <div class="flex items-center justify-between mb-1 border-b border-slate-800 pb-1">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+            <i class="fa-solid fa-magnifying-glass-chart text-cyan-400"></i> Forensic Trace &amp; Pod Attribution
+          </h2>
+          <span class="text-[9.5px] text-slate-400 font-mono">Pod &amp; Agent Level</span>
+        </div>
+
+        <div class="flex-1 overflow-y-auto scrollbar-thin pr-1 text-xs font-mono" id="trace-details">
+          <div class="text-slate-500 text-center py-6 italic text-[10.5px]">
+            Select any incident or mitigation to trace the origin pod, agent identity, exact payload/syscall, and remediation action.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM PANEL: SECURITY EVENT HISTORY & AUDIT LOG EXPLORER -->
+  <section class="px-6 py-2">
+    <div class="bg-dark-card border border-dark-border rounded-xl p-3.5 shadow-lg flex flex-col">
+      <div class="flex flex-wrap items-center justify-between mb-2 border-b border-slate-800 pb-1.5 gap-2">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-6 h-6 rounded-lg bg-rose-950 border border-rose-800 text-rose-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              Security Event History &amp; Audit Log
+              <span class="text-[10px] font-mono text-cyan-400 bg-cyan-950 px-2 py-0.2 rounded border border-cyan-800" id="history-total-count">0 Recorded Incidents</span>
+            </h2>
+            <p class="text-[10px] text-slate-400">Chronological history of security violations across the cluster. Click any row to view complete forensic details.</p>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex items-center space-x-2 text-xs">
+          <span class="text-slate-400 font-mono text-[11px]">Filter Severity:</span>
+          <select id="history-severity-filter" onchange="filterEventHistory()" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2 py-0.5 font-mono focus:outline-none focus:border-cyan-500">
+            <option value="ALL">All Severities</option>
+            <option value="CRITICAL">Critical Only</option>
+            <option value="HIGH">High Only</option>
+            <option value="MEDIUM">Medium Only</option>
+          </select>
+          <button onclick="exportAuditLog()" class="px-2.5 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition font-mono flex items-center gap-1.5 text-xs">
+            <i class="fa-solid fa-download text-[10px]"></i> Export JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- History Table -->
+      <div class="overflow-x-auto max-h-[220px] scrollbar-thin rounded-lg border border-slate-800/80">
+        <table class="w-full text-left text-xs font-mono divide-y divide-slate-800">
+          <thead class="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[10px] sticky top-0 z-10 backdrop-blur">
+            <tr>
+              <th class="py-2 px-3">Time</th>
+              <th class="py-2 px-3">Incident ID</th>
+              <th class="py-2 px-3">Severity</th>
+              <th class="py-2 px-3">Category</th>
+              <th class="py-2 px-3">Agent &amp; Pod Attribution</th>
+              <th class="py-2 px-3">Namespace</th>
+              <th class="py-2 px-3">Policy / Rule Violated</th>
+              <th class="py-2 px-3">Mitigation / Status</th>
+              <th class="py-2 px-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 bg-slate-950/40 text-slate-300" id="history-table-body">
+            <tr>
+              <td colspan="9" class="py-6 text-center text-slate-500 italic">
+                No historical security incidents recorded yet.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- HITL REVIEW & ACTION MODAL -->
+  <div id="hitl-action-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-dark-card border border-purple-800/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh] mitigation-glow">
+      <div class="p-4 border-b border-purple-900/60 flex items-center justify-between bg-slate-900/90">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-purple-950 border border-purple-700 text-purple-400 flex items-center justify-center text-sm shadow-md">
+            <i class="fa-solid fa-user-check"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-sm text-white" id="hitl-modal-id">MIT-00000000</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-purple-950 text-purple-300 border border-purple-700" id="hitl-modal-status">AWAITING_APPROVAL</span>
+            </div>
+            <p class="text-xs text-slate-400" id="hitl-modal-title">Mitigation Proposal Review</p>
+          </div>
+        </div>
+        <button onclick="closeHitlModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- HITL Modal Body -->
+      <div class="p-5 space-y-3.5 overflow-y-auto scrollbar-thin font-mono text-xs" id="hitl-modal-body">
+      </div>
+
+      <!-- Operator Action Footer -->
+      <div class="p-3.5 bg-slate-900/80 border-t border-purple-900/40 flex justify-between items-center text-xs">
+        <div class="flex items-center space-x-2">
+          <span class="text-slate-400 font-sans">Operator:</span>
+          <input type="text" id="hitl-operator-input" value="Lead Security Architect" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 font-mono focus:border-cyan-500 focus:outline-none">
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="submitHitlAction('REJECT')" class="px-3 py-1.5 rounded-lg bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-xmark"></i> Reject Patch
+          </button>
+          <button onclick="submitHitlAction('APPROVE')" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition flex items-center gap-1.5 shadow-md shadow-emerald-900/50">
+            <i class="fa-solid fa-check-double"></i> Approve &amp; Execute Auto-Correct
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPREHENSIVE INCIDENT DETAIL MODAL -->
+  <div id="incident-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[88vh]">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-rose-950 border border-rose-800 text-rose-400 flex items-center justify-center text-sm" id="modal-incident-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-sm text-white" id="modal-incident-id">SEC-00000000</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono" id="modal-incident-severity">CRITICAL</span>
+            </div>
+            <p class="text-xs text-slate-400" id="modal-incident-title">Incident Title</p>
+          </div>
+        </div>
+        <button onclick="closeIncidentModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto scrollbar-thin font-mono text-xs" id="modal-incident-body">
+      </div>
+
+      <div class="p-3 bg-slate-900/60 border-t border-slate-800 flex justify-between items-center text-xs">
+        <span class="text-slate-500">SuperK8Security Autonomous Audit Log Entry</span>
+        <button onclick="closeIncidentModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium">
+          Close Forensic Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POD DETAIL MODAL -->
+  <div id="pod-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/70">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center">
+            <i class="fa-solid fa-cube"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white" id="modal-pod-name">pod-name</h3>
+            <p class="text-xs text-slate-400" id="modal-agent-name">Agent Manifest &amp; Sandbox Policy</p>
+          </div>
+        </div>
+        <button onclick="closePodModal()" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto scrollbar-thin font-mono text-xs" id="modal-content">
+      </div>
+      <div class="p-3 bg-slate-900/50 border-t border-slate-800 flex justify-end">
+        <button onclick="closePodModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs">
+          Close Inspector
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-dark-border bg-dark-card/60 px-6 py-2 text-xs text-slate-500 flex justify-between items-center font-mono">
+    <div>SuperK8Security Autonomous Sandbox &bull; 1-Minute Rotating Breach Engine &bull; Zero-Trust Pod Isolation: ACTIVE</div>
+    <div>Live SOC Feed: <span class="text-emerald-400 font-bold">CONNECTED</span></div>
+  </footer>
+
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

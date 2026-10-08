@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SuperK8Security Architecture Slides
+Comment=Open Architecture Presentation Slides for Architects
+Exec=google-chrome --no-sandbox http://localhost:8000/slides
+Icon=x-office-presentation
+Terminal=false
+Categories=Development;Documentation;

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SuperK8Security SOC Dashboard
+Comment=Open SuperK8Security Multi-Agent SOC Monitor
+Exec=google-chrome --no-sandbox http://localhost:8000
+Icon=security-high
+Terminal=false
+Categories=Network;Security;
